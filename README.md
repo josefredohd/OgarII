@@ -1,4 +1,4 @@
-[![shield to Agar.io Private Servers guild](https://discordapp.com/api/guilds/407210435721560065/embed.png?style=shield)](https://discord.gg/XcKgShT)
+[![shield to Agar.io Private Servers guild](https://discordapp.com/api/guilds/407210435721560065/embed.png?style=shield)](https://discord.com/invite/fFa56EP5vg)
 
 # OgarII WebSockets Edition
 
@@ -14,7 +14,6 @@ Your friendly agar.io private server recreation, now using WebSockets instead of
 
 ## Notes
 
-- Ask all your questions over on the [Agar.io Private Servers](https://discord.gg/66X2ESb) Discord guild.
 
 - Before connecting from agar.io you will need to do `core.disableIntegrityChecks(true)` in the console.
 
