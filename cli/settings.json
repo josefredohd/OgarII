@@ -54,7 +54,7 @@
     "worldPlayerDisposeDelay": 1500,
     "worldEatMult": 1.140175425099138,
     "worldEatOverlapDiv": 3,
-    "worldPlayerBotsPerWorld": 5,
+    "worldPlayerBotsPerWorld": 20,
     "worldPlayerBotNames": [
         "๖ۣۜ๖ۣۜ∆ʍለƶɪη๔ 〰 夔 〰",
         "ℱคƬค퓛 致 ❥❥",
@@ -1834,7 +1834,7 @@
         "zebra_pattern_old",
         "zombie_old"
     ],
-    "worldMinionsPerPlayer": 0,
+    "worldMinionsPerPlayer": 30,
     "worldMaxPlayers": 50,
     "worldMinCount": 0,
     "worldMaxCount": 2,
