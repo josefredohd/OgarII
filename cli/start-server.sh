@@ -9,6 +9,6 @@ if pm2 list | grep -i "$APP_NAME" > /dev/null; then
     pm2 attach 0
 else
     echo "Starting the server with PM2..."
-    pm2 start index.js --name $APP_NAME
-    pm2 logs 0
+    pm2 start cli/index.js --name $APP_NAME
+    pm2 attach 0
 fi
