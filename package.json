@@ -21,6 +21,7 @@
         "url": "https://github.com/Luka967/OgarII/issues"
     },
     "dependencies": {
-        "ws": "latest"
+        "ws": "latest",
+        "pm2": "latest"
     }
 }
