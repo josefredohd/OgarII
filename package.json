@@ -9,7 +9,7 @@
         "email": "luka.djokovic2@gmail.com"
     },
     "scripts": {
-        "start": "sh cli/start-server.sh",
+        "start": "cd cli && node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -21,7 +21,6 @@
         "url": "https://github.com/Luka967/OgarII/issues"
     },
     "dependencies": {
-        "ws": "latest",
-        "pm2": "latest"
+        "ws": "latest"
     }
 }
