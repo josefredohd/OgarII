@@ -9,7 +9,7 @@
         "email": "luka.djokovic2@gmail.com"
     },
     "scripts": {
-        "start": "sh cli/start-server.sh",
+        "start": "if pm2 list | grep -i 'agario-server' > /dev/null; then pm2 attach 0; else cd cli && pm2 start index.js --name agario-server; fi",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
