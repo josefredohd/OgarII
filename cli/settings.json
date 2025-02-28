@@ -4,7 +4,7 @@
     "listenerMaxConnections": 150,
     "listenerMaxClientDormancy": 86400000,
     "listenerMaxConnectionsPerIP": 0,
-    "listeningPort": 3000,
+    "listeningPort": 3001,
     "serverFrequency": 25,
     "serverName": "Fredo Server",
     "serverGamemode": "FFA",
