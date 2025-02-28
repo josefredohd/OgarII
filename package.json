@@ -9,7 +9,7 @@
         "email": "luka.djokovic2@gmail.com"
     },
     "scripts": {
-        "start": "node -e \"const isGlitch = process.env.GLITCH_PROJECT_NAME !== undefined; const isReplit = process.env.REPL_ID !== undefined; if (isGlitch) { console.log('Running on Glitch'); require('child_process').execSync('node index.js', {stdio: 'inherit'}); } else if (isReplit) { console.log('Running on Replit'); require('child_process').execSync('cd cli && node index.js', {stdio: 'inherit'}); } else { console.log('Running on another platform'); }\"",
+        "start": "cd cli && node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
