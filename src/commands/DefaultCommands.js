@@ -575,8 +575,8 @@ module.exports = (commands, chatCommands) => {
         }),
         genCommand({
             name: "addminion",
-            args: "<id> [count]",
-            desc: "assign minions to a player",
+            args: "<id> [count] [name] [skin]",
+            desc: "assign minions to a player with optional name and skin",
             /**
              * @param {ServerHandle} context
              */
@@ -584,15 +584,23 @@ module.exports = (commands, chatCommands) => {
                 if (args.length === 1) args[1] = "1";
                 const player = getPlayerByID(args, handle, 0, false);
                 const count = getInt(args, handle, 1, "count");
-                if (player === false || count === false)
-                    return;
+                const name = args[2] || "";
+                const skin = args[3] || "random";
+
+                if (player === false || count === false) return;
                 if (!player.router.isExternal)
                     return void handle.logger.print("player is not external");
                 if (!player.hasWorld)
                     return void handle.logger.print("player is not in a world");
-                for (let i = 0; i < count; i++) new Minion(player.router);
-                handle.logger.print(`added ${count} minions to player`);
-            }
+
+                for (let i = 0; i < count; i++) {
+                    new Minion(player.router, name, skin);
+                }
+
+                handle.logger.print(
+                    `added ${count} minions to player with name "${name}" and skin "${skin}"`,
+                );
+            },
         }),
         genCommand({
             name: "rmminion",
