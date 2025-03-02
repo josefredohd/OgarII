@@ -162,20 +162,20 @@ class World {
         this.worldChat.add(player.router);
         this.handle.gamemode.onPlayerJoinWorld(player, this);
         player.router.onWorldSet();
-        this.handle.logger.debug(`player ${player.id} has been added to world ${this.id}`);
-    
+        this.handle.logger.debug(
+            `player ${player.id} has been added to world ${this.id}`,
+        );
+
         if (!player.router.isExternal) return;
-    
-        // Lista de IPs a las que se les asignarán Minions
-        const allowedIPs = [];
-    
-        // Verifica si la lista de IPs permitidas está vacía o si la IP del jugador está en la lista
-        if (allowedIPs.length === 0 || allowedIPs.includes(player.router.remoteAddress)) {
-            // Asignar Minions a todos los jugadores si la lista está vacía
-            // o solo a los jugadores con IP permitida si la lista contiene direcciones
-            for (let i = 0; i < this.settings.worldMinionsPerPlayer; i++) {
-                new Minion(player.router);
+        const defaultMinionsCount = this.settings.worldMinionsPerPlayer;
+        const defaultMinionName = "";
+        const defaultMinionSkin = "random";
+        try {
+            for (let i = 0; i < defaultMinionsCount; i++) {
+                new Minion(player.router, defaultMinionName, defaultMinionSkin);
             }
+        } catch (error) {
+            console.error("Error assigning default minions:", error);
         }
     }
     /** @param {Player} player */
