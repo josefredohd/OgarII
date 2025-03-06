@@ -773,6 +773,44 @@ module.exports = (commands, chatCommands) => {
             }
         }),
         genCommand({
+            name: "killme",
+            args: "",
+            desc: "Kill your own cell instantly",
+            /**
+             * @param {ServerHandle} handle
+             * @param {Connection} context
+             */
+            exec: (handle, context, args) => {
+                if (!context.hasPlayer) {
+                    handle.listener.globalChat.directMessage(
+                        null,
+                        context,
+                        "You don't have a player associated with yourself.",
+                    );
+                    return;
+                }
+                const player = context.player;
+                if (!player.ownedCells.length) {
+                    handle.listener.globalChat.directMessage(
+                        null,
+                        context,
+                        "You don't have any cells to kill.",
+                    );
+                    return;
+                }
+                for (let i = player.ownedCells.length - 1; i >= 0; i--) {
+                    player.world.removeCell(player.ownedCells[i]);
+                }
+
+                handle.listener.globalChat.directMessage(
+                    null,
+                    context,
+                    "You have been killed.",
+                );
+                handle.logger.print(`Player ${player.id} killed themselves.`);
+            },
+        }),
+        genCommand({
             name: "worldid",
             args: "",
             desc: "get your world's id",
