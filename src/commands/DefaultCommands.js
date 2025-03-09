@@ -68,12 +68,11 @@ function splitSettingId(id) {
     }
     return items;
 }
-// Función para eliminar los skins del nombre
 function cleanName(name) {
     if (name === null || name === undefined) {
-        return ""; // Retorna un string vacío si el nombre es null o undefined
+        return "";
     }
-    return name.replace(/<.*?>/g, "").trim(); // Elimina todo lo que está dentro de <>
+    return name.replace(/<.*?>/g, "").replace(/\{.*?\}/g, "").trim();
 }
 /**
  * @param {string[]} a
@@ -259,9 +258,9 @@ module.exports = (commands, chatCommands) => {
              * @param {ServerHandle} context
              */
             exec: (handle, context, args) => {
-                const matchingType = args.length >= 1 ? args[0] : "connection"; // Default a 'connection' si no se proporciona un tipo
+                const matchingType = args.length >= 1 ? args[0] : "connection";
                 const routers = handle.listener.routers
-                    .filter(v => v.type === matchingType); // Filtra solo los routers del tipo especificado
+                    .filter(v => v.type === matchingType);
                 handle.logger.print(table({
                     columns: [
                         { text: "INDEX",    headPad: " ", emptyPad: "/", rowPad: " ", separated: false },
@@ -271,7 +270,7 @@ module.exports = (commands, chatCommands) => {
                         { text: "DORMANT",  headPad: " ", emptyPad: "/", rowPad: " ", separated: false },
                         { text: "PROTOCOL", headPad: " ", emptyPad: "/", rowPad: " ", separated: false },
                         { text: "PID",      headPad: " ", emptyPad: "/", rowPad: " ", separated: false },
-                        { text: "NAME",     headPad: " ", emptyPad: "/", rowPad: " ", separated: false } // Nueva columna para el nombre
+                        { text: "NAME",     headPad: " ", emptyPad: "/", rowPad: " ", separated: false }
                     ],
                     rows: routers.map((v, i) => [
                         i.toString(),
@@ -281,7 +280,7 @@ module.exports = (commands, chatCommands) => {
                         shortPrettyTime(Date.now() - v.lastActivityTime),
                         v.protocol ? v.protocol.subtype : null,
                         v.hasPlayer ? v.player.id.toString() : null,
-                        v.hasPlayer ? cleanName(v.player.leaderboardName) : "N/A" // Función para limpiar el nombre
+                        v.hasPlayer ? cleanName(v.player.leaderboardName) : "N/A"
                     ])
                 }, EOL));
             }
@@ -296,9 +295,9 @@ module.exports = (commands, chatCommands) => {
              */
             exec: (handle, context, args) => {
                 const worldId = args.length >= 1 ? parseInt(args[0]) || null : null;
-                const routerType = args.length === 2 ? args[1] : "connection"; // Establece "connection" como tipo predeterminado
+                const routerType = args.length === 2 ? args[1] : "connection";
                 const players = handle.listener.routers
-                    .filter(v => v.hasPlayer && (routerType == null || v.type === routerType)) // Asegúrate de que solo los de tipo "connection" sean incluidos
+                    .filter(v => v.hasPlayer && (routerType == null || v.type === routerType))
                     .map(v => v.player)
                     .filter(v => worldId == null || (v.hasWorld && v.world.id === worldId));
                 handle.logger.print(table({
@@ -343,9 +342,9 @@ module.exports = (commands, chatCommands) => {
              */
             exec: (handle, context, args) => {
                 const worldId = args.length >= 1 ? parseInt(args[0]) || null : null;
-                const routerType = "playerbot"; // Fija el tipo de router a "playerbot"
+                const routerType = "playerbot";
                 const players = handle.listener.routers
-                    .filter(v => v.hasPlayer && v.type === routerType) // Filtra solo los routers de tipo "playerbot"
+                    .filter(v => v.hasPlayer && v.type === routerType)
                     .map(v => v.player)
                     .filter(v => worldId == null || (v.hasWorld && v.world.id === worldId));
                 handle.logger.print(table({
@@ -371,7 +370,7 @@ module.exports = (commands, chatCommands) => {
                             case 0:
                                 ret.push("alive");
                                 ret.push(Math.round(v.score).toString());
-                                ret.push(cleanName(v.leaderboardName));  // Utiliza cleanName para limpiar el nombre
+                                ret.push(cleanName(v.leaderboardName));
                                 break;
                             case 1: ret.push("spec"); break;
                             case 2: ret.push("roam"); break;
