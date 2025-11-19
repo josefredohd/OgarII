@@ -472,15 +472,14 @@ class World {
 
         for (let id in this.players) {
             const player = this.players[id];
-            if (player.exists) {
+            
+            if (player.exists && player.router && !player.router.disconnected) {
                 const playerType = player.router.type;
-                const isBot = playerType === 'playerbot' || playerType === 'minion';
+                const isBot = playerType === "playerbot" || playerType === "minion";
 
                 if (!isBot && player !== excludePlayer) {
-                    let totalX = 0,
-                        totalY = 0,
-                        totalMass = 0;
-                    let mainColor = 0x7F7F7F;
+                    let totalX = 0, totalY = 0, totalMass = 0;
+                    let mainColor = 0x7f7f7f;
                     let cellCount = player.ownedCells.length;
 
                     if (cellCount > 0) {
@@ -495,12 +494,11 @@ class World {
                         }
                     }
 
-                    const playerName = player.cellName || 'An unnamed cell';
-
+                    const playerName = player.cellName || "An unnamed cell";
                     const isAlive = cellCount > 0;
 
-                    const posX = isAlive ? totalX / cellCount : (player.viewArea?.x || 0);
-                    const posY = isAlive ? totalY / cellCount : (player.viewArea?.y || 0);
+                    const posX = isAlive ? totalX / cellCount : player.viewArea?.x || 0;
+                    const posY = isAlive ? totalY / cellCount : player.viewArea?.y || 0;
 
                     realPlayers.push({
                         id: player.id,
@@ -511,12 +509,11 @@ class World {
                         mass: totalMass,
                         cells: cellCount,
                         color: mainColor,
-                        isAlive: isAlive
+                        isAlive: isAlive,
                     });
                 }
             }
         }
-
         return realPlayers;
     }
 
@@ -917,3 +914,4 @@ module.exports = World;
 const Cell = require("../cells/Cell");
 const Player = require("./Player");
 const ServerHandle = require("../ServerHandle");
+
