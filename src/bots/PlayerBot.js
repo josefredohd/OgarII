@@ -4,13 +4,20 @@ const fs = require('fs');
 class PlayerBot extends Bot {
     /**
      * @param {World} world
+     * @param {string} [name] - Nombre opcional
+     * @param {string} [skin] - Skin opcional
      */
-    constructor(world) {
+    constructor(world, name, skin) {
         super(world);
 
         this.splitCooldownTicks = 0;
         /** @type {Cell} */
         this.target = null;
+        this.lastMoveDirection = { x: 0, y: 0 };
+
+        this.botName = name || "";
+        this.botSkin = skin || "";
+        this.hasSetSkin = false;
     }
 
     static get type() { return "playerbot"; }
@@ -21,28 +28,53 @@ class PlayerBot extends Bot {
             || !this.player.exists
             || !this.player.hasWorld;
     }
+
     update() {
         if (this.splitCooldownTicks > 0) this.splitCooldownTicks--;
         else this.target = null;
 
         this.player.updateVisibleCells();
         const player = this.player;
+
         if (player.state === -1) {
-			const names = this.listener.settings.worldPlayerBotNames;
-			const skins = this.listener.settings.worldPlayerBotSkins;
+            const names = this.listener.settings.worldPlayerBotNames;
+            const skins = this.listener.settings.worldPlayerBotSkins;
 
-			// Seleccionar una skin al azar de la lista
-			const randomSkin = skins[~~(Math.random() * skins.length)];
+            let randomSkin = "";
+            let randomName = "";
 
-			// Seleccionar un nombre al azar de la lista
-			const randomName = names[~~(Math.random() * names.length)] || "Player bot";
+            if (this.botSkin) {
+                randomSkin = this.botSkin;
+            } else {
+                randomSkin = skins[~~(Math.random() * skins.length)] || "";
+            }
 
-			// Formatear el nombre incluyendo la skin
-			this.spawningName = `<${randomSkin}>${randomName}`;
+            if (this.botName) {
+                randomName = this.botName;
+            } else {
+                randomName = names[~~(Math.random() * names.length)] || "Player bot";
+            }
 
-			this.onSpawnRequest();
-			this.spawningName = null;
-		}
+            this.spawningName = randomName;
+
+            if (this.player) {
+                this.player.cellSkin = randomSkin;
+                this.player.leaderboardName = randomName;
+            }
+
+            this.onSpawnRequest();
+            this.spawningName = null;
+            this.hasSetSkin = true; 
+
+        } 
+
+        else if (player.state === 0 && !this.hasSetSkin && this.player) {
+            const skins = this.listener.settings.worldPlayerBotSkins;
+            const randomSkin = skins[~~(Math.random() * skins.length)] || "";
+
+            this.player.cellSkin = randomSkin;
+            this.hasSetSkin = true;
+        }
 
         /** @type {PlayerCell} */
         let cell = null;
@@ -119,15 +151,22 @@ class PlayerBot extends Bot {
         }
 
         if (
-                willingToSplit && !splitkillObstacleNearby && this.splitCooldownTicks <= 0 &&
-                bestPrey !== null && bestPrey.size * 2 > cell.size
-            ) {
+            willingToSplit && !splitkillObstacleNearby && this.splitCooldownTicks <= 0 &&
+            bestPrey !== null && bestPrey.size * 2 > cell.size
+        ) {
             this.target = bestPrey;
             this.mouseX = bestPrey.x;
             this.mouseY = bestPrey.y;
             this.splitAttempts++;
-            this.splitCooldownTicks = 25;
+            this.splitCooldownTicks = 15;
         } else {
+            if (mouseX === 0 && mouseY === 0) {
+                this.lastMoveDirection.x = Math.random() * 2 - 1;
+                this.lastMoveDirection.y = Math.random() * 2 - 1;
+                mouseX = this.lastMoveDirection.x;
+                mouseY = this.lastMoveDirection.y;
+            }
+
             const d = Math.max(1, Math.sqrt(mouseX * mouseX + mouseY * mouseY));
             this.mouseX = cell.x + mouseX / d * player.viewArea.w;
             this.mouseY = cell.y + mouseY / d * player.viewArea.h;
@@ -141,6 +180,7 @@ class PlayerBot extends Bot {
     canEat(aSize, bSize) {
         return aSize > bSize * this.listener.settings.worldEatMult;
     }
+
     /**
      * @param {number} aSize
      * @param {number} bSize
